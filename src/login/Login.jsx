@@ -1,11 +1,11 @@
-// Login.js
+// Login.jsx
 
 import React, { useState } from 'react';
 import { Container, Form, Button } from 'react-bootstrap';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
+const Login = ({ onLogin }) => {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -15,12 +15,12 @@ const Login = () => {
 
     try {
       const response = await axios.post('http://localhost:5000/login', { name, password });
-      navigate('/dashboard');
+      const { role } = response.data; // 역할 정보 가져오기
       localStorage.setItem('isLoggedIn', 'true');
-      localStorage.setItem('username', name);      
-      window.location.reload();
-      
-      console.log(response.data.message, "test"); // 로그인 성공 또는 실패 메시지 출력
+      localStorage.setItem('username', name);
+      localStorage.setItem('userRole', role); // 역할 정보 저장
+      onLogin(); // 로그인 성공 시 상위 컴포넌트(App)에게 로그인 상태 변경 알림
+      navigate('/dashboard');
     } catch (error) {
       console.error('로그인 오류:', error);
     }
@@ -31,10 +31,10 @@ const Login = () => {
       <h2 className="text-center">로그인</h2>
       <Form className="mt-4" onSubmit={handleSubmit}>
         <Form.Group controlId="formBasicEmail">
-          <Form.Label>이메일 주소</Form.Label>
+          <Form.Label>닉네임</Form.Label>
           <Form.Control
             type="text"
-            placeholder="이메일을 입력하세요"
+            placeholder="닉네임을 입력하세요"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
@@ -50,7 +50,7 @@ const Login = () => {
           />
         </Form.Group>
 
-        <Button variant="primary" type="submit" >
+        <Button variant="primary" type="submit">
           로그인
         </Button>
       </Form>
