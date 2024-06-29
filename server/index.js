@@ -79,7 +79,7 @@ app.post('/login', (req, res) => {
       if (results.length > 0) {
           // 사용자가 존재하면 세션에 사용자 정보 저장
           req.session.user = results[0];
-          return res.status(200).json({ message: 'Login successful' });
+          return res.status(200).json({ message: 'Login successful', role: results[0].role });
       } else {
           return res.status(401).json({ error: 'Invalid credentials' });
       }

@@ -7,7 +7,7 @@ const CustomNavbar = () => {
   const [role, setRole] = useState('');
 
   useEffect(() => {
-    const userRole = localStorage.getItem('userRole');
+    const userRole = localStorage.getItem('username');
     if (userRole) {
       setRole(userRole);
     }
@@ -30,7 +30,7 @@ const CustomNavbar = () => {
           <Nav.Link onClick={() => navigate("/users")}>인원관리</Nav.Link>
           <Nav.Link href="#competition">대회관리</Nav.Link>
           <Nav.Link href="#records">전적관리</Nav.Link>
-          {role === 'admin' && <Nav.Link onClick={() => navigate("/users/add")}>인원추가(관리자)</Nav.Link>}
+          {role === '민성' && <Nav.Link onClick={() => navigate("/users/add")}>인원추가(관리자)</Nav.Link>}
         </Nav>
         <Nav>
           <NavDropdown title={<Image src="" roundedCircle width="30" height="30" />} id="basic-nav-dropdown" align="end">
