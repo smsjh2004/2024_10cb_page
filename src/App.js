@@ -5,6 +5,7 @@ import Login from './login/Login';
 import Dashboard from './dashboard/Dashboard';
 import User from './user/User';
 import UserAdd from './user/UserAdd';
+import UserEdit from './user/UserEdit';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -36,6 +37,7 @@ const App = () => {
 
         <Route path="/users" element={<User />} />
         <Route path="/users/add" element={<UserAdd />} />
+        <Route path="/users/edit/:userId" element={<UserEdit />} />
 
       </Routes>
     </Router>

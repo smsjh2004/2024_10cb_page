@@ -1,7 +1,7 @@
 // server.js
 
 const express = require('express');
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const bodyParser = require('body-parser');
 const cors = require('cors');  // cors 모듈 추가
 const session = require('express-session');
@@ -121,18 +121,60 @@ app.get('/users', (req, res) => {
   });
 });
 
-// 사용자 상세 조회
-app.get('/users/:id', (req, res) => {
-  const { id } = req.params;
-  const query = 'SELECT id, name, invitedAt, role, tier, race, second_race, third_race FROM users WHERE id = ?';
-  connection.query(query, [id], (err, results) => {
-      if (err) {
-          console.error('Error fetching user:', err);
-          res.status(500).send('Error fetching user');
-      } else if (results.length === 0) {
-          res.status(404).send('User not found');
-      } else {
-          res.status(200).json(results[0]);
-      }
+
+
+// 사용자 정보 가져오기
+app.get('/users/:userId', (req, res) => {
+  const userId = req.params.userId; // URL에서 사용자 ID 가져오기
+  const query = 'SELECT * FROM users WHERE id = ?';
+  connection.query(query, [userId], (err, results) => {
+    if (err) {
+      console.error('Error fetching user:', err);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+    if (results.length > 0) {
+      return res.status(200).json(results[0]); // 첫 번째 사용자 정보 반환
+    } else {
+      return res.status(404).json({ error: 'User not found' });
+    }
+  });
+});
+
+
+// // 사용자 정보 가져오기
+// app.get('/users/:userId', (req, res) => {
+//   const userId = req.params.userId; // URL에서 사용자 ID 가져오기
+//   const query = 'SELECT * FROM users WHERE id = ?';
+  
+//   connection.query(query, [userId], (err, results) => {
+//     if (err) {
+//       console.error('Error fetching user:', err);
+//       return res.status(500).json({ error: 'Internal Server Error' });
+//     }
+//     if (results.length > 0) {
+//       return res.status(200).json(results[0]); // 첫 번째 사용자 정보 반환
+//     } else {
+//       return res.status(404).json({ error: 'User not found' });
+//     }
+//   });
+// });
+
+
+
+// 사용자 수정
+app.put('/users/:userId', (req, res) => {
+  const userId = req.params.userId;
+  const { name, password, role, tier, race, second_race, third_race } = req.body;
+  const query = 'UPDATE users SET name = ?, password = ?, role = ?, tier = ?, race = ?, second_race = ?, third_race = ? WHERE id = ?';
+  connection.query(query, [name, password, role, tier, race, second_race, third_race, userId], (err, results) => {
+    if (err) {
+      console.error('Error updating user:', err);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+    if (results.affectedRows > 0) {
+      return res.status(200).json({ message: 'User updated successfully' });
+    } else {
+      return res.status(404).json({ error: 'User not found' });
+    }
   });
 });

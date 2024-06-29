@@ -16,7 +16,6 @@ const Login = ({ onLogin }) => {
     try {
       const response = await axios.post('http://localhost:5000/login', { name, password });
       const { role } = response.data; // 역할 정보 가져오기
-      console.log("Dddddd",response)
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('username', name);
       localStorage.setItem('userRole', role); // 역할 정보 저장

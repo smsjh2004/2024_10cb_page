@@ -4,12 +4,15 @@ import React, { useEffect, useState } from 'react';
 import { fetchUsers } from '../api/Api';
 import { Table, Container, Alert, Spinner, Button } from 'react-bootstrap';
 import dayjs from 'dayjs';
+import { useNavigate } from "react-router-dom";
 
 const UserList = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [role, setRole] = useState('');
+
+  const navigate = useNavigate();
 
     useEffect(() => {
       const userRole = localStorage.getItem('userRole');
@@ -49,7 +52,7 @@ const UserList = () => {
     return (
         <Container>
             <h1 className="my-4">인원 관리</h1>
-            {role === "admin" && <Button variant="primary" className="mb-3" onClick={() => alert('Add User Clicked')}>Add User</Button>}
+            {role === "admin" && <Button variant="primary" className="mb-3" onClick={() => navigate('/users/add')}>Add User</Button>}
             <Table striped bordered hover responsive>
                 <thead>
                     <tr>
@@ -65,7 +68,7 @@ const UserList = () => {
                 <tbody>
                     {users.map(user => (
                         <tr key={user.id}>
-                            <td>{user.name}</td>
+                            <td onClick={()=>navigate(`/users/edit/${user.id}`)}>{user.name}</td>
                             <td>{user.tier}</td>
                             <td>{user.race}</td>
                             <td>{user.second_race}</td>
